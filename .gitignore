@@ -1,0 +1,2 @@
+!kube_configs/*.yaml.base
+kube_configs/*.yaml

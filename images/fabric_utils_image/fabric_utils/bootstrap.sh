@@ -3,7 +3,7 @@ rm -rf /shared/*
 rm -rf /shared/utils
 rm -rf /utils/orderer.block
 
-docker pull hyperledger/fabric-ccenv:x86_64-1.0.0-alpha
+docker pull hyperledger/fabric-ccenv:x86_64-1.1.0-alpha
 
 echo "Generating crypto material"
 generate_crypto.sh

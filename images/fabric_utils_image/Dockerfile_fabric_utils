@@ -1,4 +1,4 @@
-FROM golang:1.7
+FROM golang:1.9
 RUN apt update && apt install -y libtool libltdl-dev
 RUN mkdir -p ${GOPATH}/src/github.com/hyperledger && \
 	cd ${GOPATH}/src/github.com/hyperledger/ && \
@@ -14,7 +14,7 @@ RUN mkdir -p ${GOPATH}/src/github.com/hyperledger && \
 #	cd ${GOPATH}/src/github.com/hyperledger/fabric/peer && \
 #	go build && \
 #	mv peer /usr/bin/peer && \
-	cp ${GOPATH}/src/github.com/hyperledger/fabric/peer/core.yaml /core.yaml && \
+#	cp ${GOPATH}/src/github.com/hyperledger/fabric/peer/core.yaml /core.yaml && \
 #	mv ${GOPATH}/src/github.com/hyperledger /hyperledger
 #	mkdir /crypto && cp ${GOPATH}/src/github.com/hyperledger/fabric/examples/e2e_cli/configtx.yaml /crypto/configtx.yaml && \
 	rm -rf ${GOPATH}/src/github.com/hyperledger
@@ -24,9 +24,9 @@ RUN wget https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz
 RUN tar -xvf docker-17.05.0-ce.tgz
 RUN cp docker/docker /usr/sbin/docker
 
-ADD utils /utils
+ADD fabric_utils /utils
 RUN cp /utils/*.sh /usr/bin/
-RUN mv /core.yaml /utils/core.yaml
+# RUN mv /core.yaml /utils/core.yaml
 RUN cp /usr/bin/cryptogen /utils/cryptogen
 RUN cp /usr/bin/configtxgen /utils/configtxgen
 

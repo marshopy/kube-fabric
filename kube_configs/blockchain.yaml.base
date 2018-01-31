@@ -35,7 +35,7 @@ spec:
         
   containers:
   - name: utils
-    image: mrshahibm/utils:x86_64-1.0.0-alpha
+    image: marshall628/fabric_utils:x86_64-0.1.0
     imagePullPolicy: Always
     command: ["sh", "-c", "bootstrap.sh  && while [ 1 ]; do sleep 100; done;"]
     env:
