@@ -1,2 +1,2 @@
-!kube_configs/*.yaml.base
+!kube_configs/template/
 kube_configs/*.yaml

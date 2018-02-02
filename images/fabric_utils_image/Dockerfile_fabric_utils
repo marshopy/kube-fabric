@@ -37,6 +37,8 @@ ADD ./output/executable/peer /usr/bin/peer
 #ADD generate_crypto.sh /usr/bin/generate_crypto.sh
 #ADD generate_genesis_block.sh /usr/bin/generate_genesis_block.sh
 
+RUN chmod 755 /utils/*.sh
+
 ENV FABRIC_CFG_PATH=/utils
 
 WORKDIR /utils

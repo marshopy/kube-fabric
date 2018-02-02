@@ -1,15 +1,17 @@
+#! /bin/bash
+
+CURRENT_DIR=$(dirname $0)
+
 echo "Deleting old stuff"
 rm -rf /shared/*
 rm -rf /shared/utils
 rm -rf /utils/orderer.block
 
-docker pull hyperledger/fabric-ccenv:x86_64-1.1.0-alpha
-
 echo "Generating crypto material"
-generate_crypto.sh
+${CURRENT_DIR}/generate_crypto.sh
 
 echo "Generating genesis block"
-generate_genesis_block.sh
+${CURRENT_DIR}/generate_genesis_block.sh
 
 echo "Copying orderer-ca.yaml"
 cp -r cas /shared/

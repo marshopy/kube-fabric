@@ -1,6 +1,10 @@
+#! /bin/bash
+
 echo "Generating Genesis Block for the orderer"
 
-./replace_configtxyaml.sh
+CURRENT_DIR=$(dirname $0)
 
-configtxgen -profile TwoOrgsOrdererGenesis -outputBlock orderer.block
+${CURRENT_DIR}/replace_configtxyaml.sh
+
+${CURRENT_DIR}/configtxgen -profile TwoOrgsOrdererGenesis -outputBlock orderer.block
 cp orderer.block /shared/
