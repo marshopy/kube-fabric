@@ -1,7 +1,7 @@
 #!/bin/bash
 ARCH=`uname -m | sed 's@i686@x86_64@'`
-VERSION=1.1.0
-RELEASE=alpha
+VERSION=1.0.5
+# RELEASE=alpha
 BASE_FOLDER=${PWD}
 IMAGE_VERSION=0.1.1
 

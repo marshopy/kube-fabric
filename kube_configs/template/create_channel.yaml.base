@@ -18,7 +18,7 @@ spec:
   - name: createchannel
     image: marshall628/fabric_utils:x86_64-0.1.1
     imagePullPolicy: Always
-    command: ["/shared/utils/create_channel.sh && while [ 1 ]; do sleep 100; done;"]
+    command: ["bash", "-c", "/shared/utils/create_channel.sh && while [ 1 ]; do sleep 100; done;"]
     env:
     - name: CHANNEL_NAME
       value: "channel1"

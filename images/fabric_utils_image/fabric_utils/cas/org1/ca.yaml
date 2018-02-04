@@ -59,7 +59,7 @@ registry:
     name: admin
     pass: adminpw
     type: client
-  maxEnrollments: 0
+  maxEnrollments: -1
 signing:
   default:
     expiry: 8000h

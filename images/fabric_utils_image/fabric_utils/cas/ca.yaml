@@ -5,7 +5,7 @@ affiliations:
   org2:
   - department1
 ca:
-  certfile: /shared/crypto-config/ordererOrganizations/ordererOrg1/ca/ca-cert.pem
+  certfile: /shared/crypto-config/ordererOrganizations/ /ca/ca-cert.pem
   keyfile: /shared/crypto-config/ordererOrganizations/ordererOrg1/ca/key.pem
 crypto:
   software:
@@ -59,7 +59,7 @@ registry:
     name: admin
     pass: adminpw
     type: client
-  maxEnrollments: 0
+  maxEnrollments: -1
 signing:
   default:
     expiry: 8000h

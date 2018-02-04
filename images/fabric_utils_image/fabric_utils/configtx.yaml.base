@@ -14,13 +14,13 @@ Profiles:
             <<: *OrdererDefaults
             Organizations:
                 - *OrdererOrg
-#        Consortiums:
-#            SampleConsortium:
-#                Organizations:
-#                    - *Org1
-#                    - *Org2
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Org1
+                    - *Org2
     TwoOrgsChannel:
-#        Consortium: SampleConsortium
+        Consortium: SampleConsortium
         Orderer:
             <<: *OrdererDefaults
             Organizations:
@@ -61,15 +61,15 @@ Organizations:
 
         # BCCSP (Blockchain crypto provider): Select which crypto implementation or
         # library to use
-        BCCSP:
-            Default: SW
-            SW:
-                Hash: SHA2
-                Security: 256
+        # BCCSP:
+        #     Default: SW
+        #     SW:
+        #         Hash: SHA2
+        #         Security: 256
                 # Location of Key Store. If this is unset, a location will
                 # be chosen using 'MSPDir'/keystore
-                FileKeyStore:
-                    KeyStore:
+        #         FileKeyStore:
+        #            KeyStore:
 
     - &Org1
         # DefaultOrg defines the organization which is used in the sampleconfig
@@ -88,15 +88,15 @@ Organizations:
 
         # BCCSP (Blockchain crypto provider): Select which crypto implementation or
         # library to use
-        BCCSP:
-            Default: SW
-            SW:
-                Hash: SHA2
-                Security: 256
+        # BCCSP:
+        #     Default: SW
+        #     SW:
+        #        Hash: SHA2
+        #         Security: 256
                 # Location of Key Store. If this is unset, a location will
                 # be chosen using 'MSPDir'/keystore
-                FileKeyStore:
-                    KeyStore:
+        #        FileKeyStore:
+        #             KeyStore:
 
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
@@ -122,15 +122,15 @@ Organizations:
 
         # BCCSP (Blockchain crypto provider): Select which crypto implementation or
         # library to use
-        BCCSP:
-            Default: SW
-            SW:
-                Hash: SHA2
-                Security: 256
+        # BCCSP:
+        #     Default: SW
+        #     SW:
+        #        Hash: SHA2
+        #        Security: 256
                 # Location of Key Store. If this is unset, a location will
                 # be chosen using 'MSPDir'/keystore
-                FileKeyStore:
-                    KeyStore:
+        #        FileKeyStore:
+        #            KeyStore:
 
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used

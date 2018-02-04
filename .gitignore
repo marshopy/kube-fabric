@@ -1,2 +1,3 @@
 !kube_configs/template/
 kube_configs/*.yaml
+.idea/

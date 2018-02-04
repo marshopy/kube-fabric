@@ -18,7 +18,7 @@ spec:
   - name: joinchannel
     image: marshall628/fabric_utils:x86_64-0.1.1
     imagePullPolicy: Always
-    command: ["/shared/utils/join_channel.sh || true && while [ 1 ]; do sleep 100; done;"]
+    command: ["bash", "-c", "/shared/utils/join_channel.sh || true && while [ 1 ]; do sleep 100; done;"]
     env:
     - name: CHANNEL_NAME
       value: "channel1"

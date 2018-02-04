@@ -3,7 +3,7 @@
 echo "Generating Crypto Material"
 CURRENT_DIR=$(dirname $0)
 
-${CURRENT_DIR}/cryptogen -peerOrgs 2 -peersPerOrg 1 -ordererNodes 1 -baseDir /utils/
+${CURRENT_DIR}/cryptogen generate --config ${CURRENT_DIR}/crypto-config.yaml
 
 cp -r crypto-config /shared/
 

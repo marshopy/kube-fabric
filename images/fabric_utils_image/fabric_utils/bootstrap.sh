@@ -7,6 +7,9 @@ rm -rf /shared/*
 rm -rf /shared/utils
 rm -rf /utils/orderer.block
 
+echo "Pulling chain code environment container"
+docker pull hyperledger/fabric-ccenv:x86_64-1.0.5
+
 echo "Generating crypto material"
 ${CURRENT_DIR}/generate_crypto.sh
 
@@ -18,6 +21,9 @@ cp -r cas /shared/
 
 echo "Copying utils folder"
 cp -r /utils /shared/
+
+echo "Touch the core.yaml"
+touch /shared/utils/core.yaml
 
 echo "Done bootstrapping"
 touch /shared/bootstrapped

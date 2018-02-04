@@ -1,10 +1,10 @@
 FROM golang:1.9
-RUN apt update && apt install -y libtool libltdl-dev
+RUN apt-get update && apt-get install -y libtool libltdl-dev vim
 RUN mkdir -p ${GOPATH}/src/github.com/hyperledger && \
 	cd ${GOPATH}/src/github.com/hyperledger/ && \
 	git clone https://github.com/hyperledger/fabric.git && \
 	cd ${GOPATH}/src/github.com/hyperledger/fabric && \
-	git checkout tags/v1.0.0-alpha  && \
+	git checkout tags/v1.0.5  && \
 	cd ${GOPATH}/src/github.com/hyperledger/fabric/common/tools/cryptogen && \
 	go build && \
 	mv cryptogen /usr/bin/cryptogen && \
