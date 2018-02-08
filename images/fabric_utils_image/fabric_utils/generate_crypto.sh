@@ -8,9 +8,9 @@ ${CURRENT_DIR}/cryptogen generate --config ${CURRENT_DIR}/crypto-config.yaml
 cp -r crypto-config /shared/
 
 # Delete admin certs so anyone on the org can perform transaction
-find /shared/ -iname admincerts -type f -exec rm -f {} \;
+# find /shared/ -iname admincerts -type f -exec rm -f {} \;
 
-for file in $(find /shared/ -iname *_sk); do 
+for file in $(find /shared/ -iname *_sk); do
     dir=$(dirname $file)
-    mv ${dir}/*_sk ${dir}/key.pem
+    mv -vf ${dir}/*_sk ${dir}/key.pem
 done

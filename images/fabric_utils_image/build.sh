@@ -3,7 +3,7 @@ ARCH=`uname -m | sed 's@i686@x86_64@'`
 VERSION=1.0.5
 # RELEASE=alpha
 BASE_FOLDER=${PWD}
-IMAGE_VERSION=0.1.1
+IMAGE_VERSION=${VERSION}
 
 PEER_DOCKER_REPOSITORY=hyperledger/fabric-peer
 if [ ! -z $RELEASE ]; then
@@ -21,6 +21,6 @@ echo "Using image ${PEER_DOCKER_REPOSITORY}:${PEER_VERSION}"
 docker run --rm -v ${BASE_FOLDER}/output/executable:/opt ${PEER_DOCKER_REPOSITORY}:${PEER_VERSION} cp /usr/local/bin/peer /opt
 docker run --rm -v ${BASE_FOLDER}/output/peerconfig:/opt ${PEER_DOCKER_REPOSITORY}:${PEER_VERSION} cp -r ${PEER_CFG_PATH} /opt
 
-docker build -f Dockerfile_fabric_utils -t marshall628/fabric_utils:x86_64-${IMAGE_VERSION} .
+docker build -f Dockerfile_fabric_utils -t marshall628/kubernetes_fabric_utils:x86_64-${IMAGE_VERSION} .
 
-docker run --rm -v ${BASE_FOLDER}:/opt marshall628/fabric_utils:x86_64-${IMAGE_VERSION} rm -rf /opt/output
+docker run --rm -v ${BASE_FOLDER}:/opt marshall628/kubernetes_fabric_utils:x86_64-${IMAGE_VERSION} rm -rf /opt/output

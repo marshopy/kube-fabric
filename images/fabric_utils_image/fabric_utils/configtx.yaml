@@ -52,24 +52,7 @@ Organizations:
         ID: OrdererMSP
 
         # MSPDir is the filesystem path which contains the MSP configuration
-        MSPDir: crypto-config/ordererOrganizations/ordererOrg1/msp
-
-        # #AdminPrincipal dictates the type of principal used for an organization's Admins policy
-        # Today, only the values of Role.ADMIN ad Role.MEMBER are accepted, which indicates a principal
-        # of role type ADMIN and role type MEMBER respectively
-        #AdminPrincipal: Role.MEMBER
-
-        # BCCSP (Blockchain crypto provider): Select which crypto implementation or
-        # library to use
-        # BCCSP:
-        #     Default: SW
-        #     SW:
-        #         Hash: SHA2
-        #         Security: 256
-                # Location of Key Store. If this is unset, a location will
-                # be chosen using 'MSPDir'/keystore
-        #         FileKeyStore:
-        #            KeyStore:
+        MSPDir: crypto-config/ordererOrganizations/ordererorg1/msp
 
     - &Org1
         # DefaultOrg defines the organization which is used in the sampleconfig
@@ -79,31 +62,14 @@ Organizations:
         # ID to load the MSP definition as
         ID: Org1MSP
 
-        MSPDir: crypto-config/peerOrganizations/peerOrg1/msp
-
-        # #AdminPrincipal dictates the type of principal used for an organization's Admins policy
-        # Today, only the values of Role.ADMIN ad Role.MEMBER are accepted, which indicates a principal
-        # of role type ADMIN and role type MEMBER respectively
-        #AdminPrincipal: Role.MEMBER
-
-        # BCCSP (Blockchain crypto provider): Select which crypto implementation or
-        # library to use
-        # BCCSP:
-        #     Default: SW
-        #     SW:
-        #        Hash: SHA2
-        #         Security: 256
-                # Location of Key Store. If this is unset, a location will
-                # be chosen using 'MSPDir'/keystore
-        #        FileKeyStore:
-        #             KeyStore:
+        MSPDir: crypto-config/peerOrganizations/peerorg1/msp
 
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: PEERHOST1
-              Port: PEERPORT1
+            - Host: peer1.peerorg1
+              Port: 7051
 
     - &Org2
         # DefaultOrg defines the organization which is used in the sampleconfig
@@ -113,31 +79,14 @@ Organizations:
         # ID to load the MSP definition as
         ID: Org2MSP
 
-        MSPDir: crypto-config/peerOrganizations/peerOrg2/msp
-
-        # #AdminPrincipal dictates the type of principal used for an organization's Admins policy
-        # Today, only the values of Role.ADMIN ad Role.MEMBER are accepted, which indicates a principal
-        # of role type ADMIN and role type MEMBER respectively
-        #AdminPrincipal: Role.MEMBER
-
-        # BCCSP (Blockchain crypto provider): Select which crypto implementation or
-        # library to use
-        # BCCSP:
-        #     Default: SW
-        #     SW:
-        #        Hash: SHA2
-        #        Security: 256
-                # Location of Key Store. If this is unset, a location will
-                # be chosen using 'MSPDir'/keystore
-        #        FileKeyStore:
-        #            KeyStore:
+        MSPDir: crypto-config/peerOrganizations/peerorg2/msp
 
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: PEERHOST2
-              Port: PEERPORT2
+            - Host: peer1.peerorg2
+              Port: 7051
 
 ################################################################################
 #
@@ -154,7 +103,7 @@ Orderer: &OrdererDefaults
     OrdererType: solo
 
     Addresses:
-        - orderer0:7050
+        - orderer.ordererorg1:7050
 
     # Batch Timeout: The amount of time to wait before creating a batch
     BatchTimeout: 2s
@@ -174,7 +123,6 @@ Orderer: &OrdererDefaults
         # max bytes will result in a batch larger than preferred max bytes.
         PreferredMaxBytes: 512 KB
 
-    MaxChannels: 100
     Kafka:
         # Brokers: A list of Kafka brokers to which the orderer connects
         # NOTE: Use IP:port notation
