@@ -29,18 +29,18 @@ verifyResult () {
 
 setGlobals () {
 	if [ $1 -eq 0 -o $1 -eq 1 ] ; then
-		export CORE_PEER_LOCALMSPID="Org1MSP"
-		export CORE_PEER_TLS_ROOTCERT_FILE=/shared/crypto-config/peerOrganizations/peerorg1/peers/peer1.peerorg1/tls/ca.crt
-		export CORE_PEER_MSPCONFIGPATH=/shared/crypto-config/peerOrganizations/peerorg1/users/Admin@peerorg1/msp
+		CORE_PEER_LOCALMSPID="Org1MSP"
+		CORE_PEER_TLS_ROOTCERT_FILE=/shared/crypto-config/peerOrganizations/peerorg1/peers/peer1.peerorg1/tls/ca.crt
+		CORE_PEER_MSPCONFIGPATH=/shared/crypto-config/peerOrganizations/peerorg1/users/Admin@peerorg1/msp
 		if [ $1 -eq 0 ]; then
-			export CORE_PEER_ADDRESS=peer1.peerorg1:7051
+			CORE_PEER_ADDRESS=peer1.peerorg1:7051
 		else
-			export CORE_PEER_ADDRESS=peer2.peerorg1:8051
+			CORE_PEER_ADDRESS=peer2.peerorg1:8051
 		fi
 	else
-		export CORE_PEER_LOCALMSPID="Org2MSP"
-		export CORE_PEER_TLS_ROOTCERT_FILE=/shared/crypto-config/peerOrganizations/peerorg2/peers/peer1.peerorg2/tls/ca.crt
-		export CORE_PEER_MSPCONFIGPATH=/shared/crypto-config/peerOrganizations/peerorg2/users/Admin@peerorg2/msp
+		CORE_PEER_LOCALMSPID="Org2MSP"
+		CORE_PEER_TLS_ROOTCERT_FILE=/shared/crypto-config/peerOrganizations/peerorg2/peers/peer1.peerorg2/tls/ca.crt
+		CORE_PEER_MSPCONFIGPATH=/shared/crypto-config/peerOrganizations/peerorg2/users/Admin@peerorg2/msp
 		if [ $1 -eq 2 ]; then
 			export CORE_PEER_ADDRESS=peer1.peerorg2:9051
 		else
@@ -71,9 +71,9 @@ updateAnchorPeers() {
     setGlobals $PEER
 
     if [ -z "${CORE_PEER_TLS_ENABLED}" -o "${CORE_PEER_TLS_ENABLED}" = "false" ]; then
-        peer channel update -o ${ORDERER_URL} -c ${CHANNEL_NAME} -f ${CHANNEL_NAME}.tx >&log.txt
+        peer channel update -o ${ORDERER_URL} -c ${CHANNEL_NAME} -f ${CORE_PEER_LOCALMSPID}.tx >&log.txt
     else
-        peer channel update -o ${ORDERER_URL} -c ${CHANNEL_NAME} -f ${CHANNEL_NAME}.tx --tls ${CORE_PEER_TLS_ENABLED} --cafile ${ORDERER_CA} >&log.txt
+        peer channel update -o ${ORDERER_URL} -c ${CHANNEL_NAME} -f ${CORE_PEER_LOCALMSPID}.tx --tls ${CORE_PEER_TLS_ENABLED} --cafile ${ORDERER_CA} >&log.txt
     fi
     res=$?
     cat log.txt

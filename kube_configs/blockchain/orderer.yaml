@@ -1,0 +1,91 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderer
+  namespace: ordererorg1
+  labels:
+    app: orderer
+spec:
+  selector:
+    app: orderer
+  ports:
+  - protocol: TCP
+    port: 7050
+    targetPort: 7050
+    name: grpc
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: orderer
+  namespace: ordererorg1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orderer
+  template:
+    metadata:
+      labels:
+        app: orderer
+    spec:
+      volumes:
+      - name: shared
+        hostPath:
+          path: /tmp
+#      volumes:
+#      - name: shared
+#        persistentVolumeClaim:
+#          claimName: shared
+      containers:
+      - name: orderer
+        image: hyperledger/fabric-orderer:x86_64-1.0.5
+        command: ["sh", "-c", "orderer || true && sleep infinity"]
+        env:
+        - name: ORDERER_CFG_PATH
+          value: /shared/utils/
+        - name: ORDERER_GENERAL_LISTENADDRESS
+          value: 0.0.0.0
+        - name: ORDERER_GENERAL_LISTENPORT
+          value: "7050"
+        - name: ORDERER_GENERAL_LOGLEVEL
+          value: debug
+        - name: ORDERER_GENERAL_LOCALMSPDIR
+          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer.ordererorg1/msp
+        - name: ORDERER_GENERAL_LOCALMSPID
+          value: OrdererMSP
+        - name: ORDERER_GENERAL_GENESISMETHOD
+          value: file
+        - name: ORDERER_GENERAL_GENESISFILE
+          value: /shared/utils/orderer.block
+        - name: ORDERER_GENERAL_TLS_ENABLED
+          value: "true"
+        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer.ordererorg1/tls/server.key
+        - name: ORDERER_GENERAL_TLS_CERTIFICATE
+          value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer.ordererorg1/tls/server.crt
+        - name: ORDERER_GENERAL_TLS_ROOTCAS
+          value: "[/shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer.ordererorg1/tls/ca.crt]"
+        volumeMounts:
+        - mountPath: /shared
+          name: shared
+        ports:
+        - containerPort: 7050
+        readinessProbe:
+          tcpSocket:
+            port: 7050
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 7050
+          initialDelaySeconds: 30
+          periodSeconds: 20
+      initContainers:
+      - name: init-orderer
+        image: marshall628/kubernetes_fabric_utils:x86_64-1.0.5
+        command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/bootstrapped ]; do echo Waiting for bootstrap; sleep 1; done;"]
+        volumeMounts:
+        - mountPath: /shared
+          name: shared

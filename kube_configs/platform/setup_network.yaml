@@ -30,8 +30,6 @@ spec:
       value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer.ordererorg1/msp/tlscacerts/tlsca.ordererorg1-cert.pem
     - name: PEER_CFG_PATH
       value: /shared/utils
-#    - name: FABRIC_CFG_PATH
-#      value: /etc/hyperledger/fabric
     - name: CORE_PEER_ADDRESS
       value: peer1.peerorg1:7051
     - name: CORE_VM_ENDPOINT
@@ -57,3 +55,10 @@ spec:
       name: shared
     - mountPath: /host/var/run/docker.sock
       name: dockersocket
+  initContainers:
+  - name: init-fabricnetwork
+    image: marshall628/kubernetes_fabric_utils:x86_64-1.0.5
+    command: ["sh", "-c", "while ( ! /shared/utils/channel_precheck.sh ); do echo Waiting for all the endpoint exposed; sleep 1; done;"]
+    volumeMounts:
+    - mountPath: /shared
+      name: shared

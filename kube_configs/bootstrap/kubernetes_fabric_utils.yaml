@@ -33,3 +33,10 @@ spec:
       name: shared
     - mountPath: /host/var/run/docker.sock
       name: dockersocket
+    readinessProbe:
+      exec:
+        command:
+        - stat
+        - /shared/bootstrapped
+      initialDelaySeconds: 5
+      periodSeconds: 5

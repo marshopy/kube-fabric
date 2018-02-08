@@ -11,5 +11,5 @@ echo "Generating Channel block for Channel name - ${CHANNEL_NAME}"
 ${CURRENT_DIR}/configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ${CHANNEL_NAME}.tx -channelID ${CHANNEL_NAME}
 
 for orgname in Org1MSP Org2MSP; do
-    ${CURRENT_DIR}/configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ${CHANNEL_NAME}.tx -channelID ${CHANNEL_NAME} -asOrg ${orgname}
+    ${CURRENT_DIR}/configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ${orgname}.tx -channelID ${CHANNEL_NAME} -asOrg ${orgname}
 done

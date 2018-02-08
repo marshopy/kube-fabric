@@ -1,0 +1,116 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: peerorg2
+  name: peer2
+  labels:
+    app: org2peer2
+spec:
+  selector:
+    app: org2peer2
+  ports:
+  - protocol: TCP
+    port: 10051
+    targetPort: 7051
+    name: grpc
+  - protocol: TCP
+    port: 10053
+    targetPort: 7053
+    name: events
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: peerorg2
+  name: org2peer2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: org2peer2
+  template:
+    metadata:
+      labels:
+        app: org2peer2
+    spec:
+      volumes:
+      - name: shared
+        hostPath:
+          path: /tmp
+      - name: msp
+        hostPath:
+          path: /tmp/crypto-config/peerOrganizations/peerorg2/peers/peer2.peerorg2/msp
+      - name: tls
+        hostPath:
+          path: /tmp/crypto-config/peerOrganizations/peerorg2/peers/peer2.peerorg2/tls
+      - name: dockersocket
+        hostPath:
+          path: /var/run/docker.sock
+#      volumes:
+#      - name: shared
+#        persistentVolumeClaim:
+#          claimName: shared
+
+      containers:
+      - name: org2peer2
+        image: hyperledger/fabric-peer:x86_64-1.0.5
+        command: ["sh", "-c", "peer node start --peer-defaultchain=false"]
+        env:
+        - name: CORE_PEER_ID
+          value: peer2.peerorg2
+        - name: CORE_PEER_ADDRESS
+          value: peer2.peerorg2:7051
+        - name: CORE_PEER_GOSSIP_EXTERNALENDPOINT
+          value:  peer2.peerorg2:7051
+        - name: CORE_PEER_GOSSIP_BOOTSTRAP
+          value:  peer2.peerorg2:7051
+        - name: CORE_PEER_GOSSIP_USELEADERELECTION
+          value: "true"
+        - name: CORE_PEER_GOSSIP_ORGLEADER
+          value: "false"
+        - name: CORE_PEER_PROFILE_ENABLED
+          value: "true"
+        - name: CORE_VM_ENDPOINT
+          value: unix:///host/var/run/docker.sock
+        - name: CORE_PEER_LOCALMSPID
+          value: Org2MSP
+        - name: CORE_LOGGING_LEVEL
+          value: debug
+        - name: CORE_PEER_TLS_ENABLED
+          value: "true"
+        - name: CORE_PEER_TLS_CERT_FILE
+          value: "/shared/crypto-config/peerOrganizations/peerorg2/peers/peer2.peerorg2/tls/server.crt"
+        - name: CORE_PEER_TLS_KEY_FILE
+          value: "/shared/crypto-config/peerOrganizations/peerorg2/peers/peer2.peerorg2/tls/server.key"
+        - name: CORE_PEER_TLS_ROOTCERT_FILE
+          value: "/shared/crypto-config/peerOrganizations/peerorg2/peers/peer2.peerorg2/tls/ca.crt"
+        volumeMounts:
+        - mountPath: /shared
+          name: shared
+        - mountPath: /etc/hyperledger/fabric/msp
+          name: msp
+        - mountPath: /etc/hyperledger/fabric/tls
+          name: tls
+        - mountPath: /host/var/run/docker.sock
+          name: dockersocket
+        ports:
+        - containerPort: 7051
+        - containerPort: 7053
+        readinessProbe:
+          tcpSocket:
+            port: 7051
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 7051
+          initialDelaySeconds: 30
+          periodSeconds: 20
+      initContainers:
+      - name: init-org2peer2
+        image: marshall628/kubernetes_fabric_utils:x86_64-1.0.5
+        command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/bootstrapped ]; do echo Waiting for bootstrap; sleep 1; done;"]
+        volumeMounts:
+        - mountPath: /shared
+          name: shared
