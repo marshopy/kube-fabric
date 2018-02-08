@@ -1,0 +1,59 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fabricnetwork
+spec:
+  restartPolicy: "Never"
+  volumes: 
+  - name: shared
+    hostPath:
+      path: /tmp
+  - name: dockersocket
+    hostPath:
+      path: /var/run/docker.sock
+#      volumes:
+#      - name: shared
+#        persistentVolumeClaim:
+#          claimName: shared
+        
+  containers:
+  - name: fabricnetwork
+    image: hyperledger/fabric-tools:x86_64-1.0.5
+    workingDir: /shared/utils
+    imagePullPolicy: Always
+    command: ["bash", "-c", "/shared/utils/setup_network.sh mychannel 1 && ( while [ 1 ]; do sleep 100; done ) || sleep infinity"]
+    env:
+    - name: ORDERER_URL
+      value: orderer.ordererorg1:7050
+    - name: ORDERER_CA
+      value: /shared/crypto-config/ordererOrganizations/ordererorg1/orderers/orderer.ordererorg1/msp/tlscacerts/tlsca.ordererorg1-cert.pem
+    - name: PEER_CFG_PATH
+      value: /shared/utils
+#    - name: FABRIC_CFG_PATH
+#      value: /etc/hyperledger/fabric
+    - name: CORE_PEER_ADDRESS
+      value: peer1.peerorg1:7051
+    - name: CORE_VM_ENDPOINT
+      value: unix:///host/var/run/docker.sock
+    - name: CORE_PEER_ID
+      value: fabricnetwork
+    - name: CORE_PEER_LOCALMSPID
+      value: Org1MSP
+    - name: CORE_PEER_MSPCONFIGPATH
+      value: /shared/crypto-config/peerOrganizations/peerorg1/users/Admin@peerorg1/msp/
+    - name: CORE_LOGGING_LEVEL
+      value: DEBUG
+    - name: CORE_PEER_TLS_ENABLED
+      value: "true"
+    - name: CORE_PEER_TLS_CERT_FILE
+      value: /shared/crypto-config/peerOrganizations/peerorg1/peers/peer1.peerorg1/tls/server.crt
+    - name: CORE_PEER_TLS_KEY_FILE
+      value: /shared/crypto-config/peerOrganizations/peerorg1/peers/peer1.peerorg1/tls/server.key
+    - name: CORE_PEER_TLS_ROOTCERT_FILE
+      value: /shared/crypto-config/peerOrganizations/peerorg1/peers/peer1.peerorg1/tls/ca.crt
+    volumeMounts:
+    - mountPath: /shared
+      name: shared
+    - mountPath: /host/var/run/docker.sock
+      name: dockersocket

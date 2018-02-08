@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kubernetes-fabric-utils
+spec:
+  restartPolicy: "Never"
+  volumes:
+  - name: shared
+    hostPath:
+      path: /tmp
+  - name: dockersocket
+    hostPath:
+      path: /var/run/docker.sock
+#      volumes:
+#      - name: shared
+#        persistentVolumeClaim:
+#          claimName: shared
+
+  containers:
+  - name: kubernetes-fabric-utils
+    image: marshall628/kubernetes_fabric_utils:x86_64-1.0.5
+    imagePullPolicy: Always
+    command: ["bash", "-c", "/utils/bootstrap.sh  && while [ 1 ]; do sleep 100; done;"]
+    env:
+    - name: PEER_CFG_PATH
+      value: /utils
+    - name: DOCKER_HOST
+      value: unix:///host/var/run/docker.sock
+    - name: CHANNEL_NAME
+      value: "mychannel"
+    volumeMounts:
+    - mountPath: /shared
+      name: shared
+    - mountPath: /host/var/run/docker.sock
+      name: dockersocket
