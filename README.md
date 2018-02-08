@@ -4,10 +4,10 @@ These instructions are to run a basic IBM blockchain network on IBM's container 
 It will bring up the following components:
 * Fabric-CA (with 3 CAs - 1 for orderer org and 2 for peer orgs)
 * Orderer (SOLO)
-* Fabric-Peer (for org1)
-* Fabric-Peer (for org2)
-* Fabric Composer
-* Marbles
+* 2 Fabric-Peer (for org1)
+* 2 Fabric-Peer (for org2)
+* Fabric tool to create channel
+* Fabric utils (Our home brewed image to assist the crypto and config artifact generation)
 
 It also creates services to expose the components.
 
@@ -124,149 +124,20 @@ Use the export command above to point your kubectl cli to the cluster.
 
 ## SETUP BLOCKCHAIN NETWORK
 
-Following instructions will setup the blockchain network on IBM Container Service.
+Following instructions will setup the blockchain network and create appropriate channel on IBM Container Service.
 
 *Note:* You might see some errors `Error from server (NotFound): error when stopping`. Ignore those errors, as those occur when the cleanup is trying to delete pods which are not created.
 
 ### TL;DR
-To perform all the following steps in one script:
+To perform the setup, please run
 ```
-cd scripts
-./setup_all.sh
-```
-
-### 1. Get into the scripts folder
-```
-cd scripts
+setup_all.sh
 ```
 
-### 2. Remove all the blockchain pods running on IBM container service
-
+To delete all the deployment, please run
 ```
-./delete_all.sh
+delete_all.sh
 ```
-
-### 3. Setup the blockchain network
-This will create the following:
-1. _utils_ pod     - This pod pulls the ccenv image and generates the crypto material & the genesis block.
-2. _CA_ pods       - One for each org
-3. _Orderer_ pod   - The SOLO orderer
-4. _Org1Peer1_ pod - The peer for org1
-5. _Org2Peer1_ pod - The peer for org2
-```
-./create_blockchain.sh
-```
-
-*Note:* Make sure that the network is up and running before following the next steps.
-```
-kubectl get pods
-```
-
-### 4. Create a channel named _channel1_
-This will create a new channel named channel1 on the orderer.
-```
-./create_channel.sh
-```
-
-### 5. Make peer of org1 join the channel created in (4)
-This will make the peer of Org1 join the channel named _channel1_
-```
-./join_channel.sh
-```
-At the end of this step, you should see the log `Peer joined the channel!` when you check the logs of the _joinchannel_ pod.
-```
-kubectl logs joinchannel
-```
-
-### 6. Start Hyperledger Composer Playground for developing Blockchain business networks
-Hyperledger Composer is a framework for developing Blockchain business networks. Find more information here:
-[https://hyperledger.github.io/composer/](https://hyperledger.github.io/composer/)
-
-This command will start an instance of the Hyperledger Composer Playground for developing Blockchain business networks:
-```
-./composer-playground.sh
-```
-Next, determine the public IP address of the cluster by running the following command:
-```
-bx cs workers blockchain
-```
-The output should be similiar to the following:
-```
-Listing cluster workers...
-OK
-ID                                                 Public IP      Private IP       Machine Type   State    Status
-kube-dal10-pabdda14edc4394b57bb08d53c149930d7-w1   169.48.140.99   10.171.239.186   free           normal   Ready
-```
-Using the value of the `Public IP` (in this example 169.48.140.99) you can now access the Hyperledger Composer Playground:
-`http://YOUR_PUBLIC_IP_HERE:31080`
-
-## Run Marbles
-
-For instructions to run marbles, look [here](./marbles/README.md)
-
-## Create a Hyperledger Composer connection profile
-
-You can create a Hyperledger Composer connection profile for use with locally installed Composer tools - for example, the `composer` CLI tool for deploying business network archives.
-
-First, determine the public IP address of the cluster by running the following command:
-```
-bx cs workers blockchain
-```
-The output should be similiar to the following:
-```
-Listing cluster workers...
-OK
-ID                                                 Public IP      Private IP       Machine Type   State    Status
-kube-dal10-pabdda14edc4394b57bb08d53c149930d7-w1   169.48.140.99   10.171.239.186   free           normal   Ready
-```
-You then need to make the following changes to this example JSON connection profile document:
-1. Replace all instances of YOUR_PUBLIC_IP_HERE with the value of the `Public IP` (in this example 169.48.140.99).
-2. Change YOUR_HOME_DIRECTORY_HERE to a directory on your machine that already exists, for example `/home/sstone1`.
-```
-{
-    "type": "hlfv1",
-    "orderers": [
-        "grpc://YOUR_PUBLIC_IP_HERE:31010"
-    ],
-    "ca": "http://YOUR_PUBLIC_IP_HERE:31001",
-    "peers": [
-        {
-            "requestURL": "grpc://YOUR_PUBLIC_IP_HERE:31020",
-            "eventURL": "grpc://YOUR_PUBLIC_IP_HERE:31021"
-        }
-    ],
-    "keyValStore": "YOUR_HOME_DIRECTORY_HERE/.hfc-key-store",
-    "channel": "channel1",
-    "mspID": "Org1MSP",
-    "deployWaitTime": "300",
-    "invokeWaitTime": "100"
-}
-```
-
-## Start a Hyperledger Composer REST server
-
-You can also deploy a Hyperledger Composer REST server after you have deployed a business network definition.
-
-First, edit the file `kube_configs/composer-rest-server.yaml.base` to reflect the business network that you have deployed. You **only** need to do this step if you have deployed a business network using the `composer` CLI. You will need to change the values of the environment variable `COMPOSER_BUSINESS_NETWORK` to reflect the name of the deployed business network. Note that when deploying using Hyperledger Composer Playground, the deployed business network is always named `org.acme.biznet`.
-
-Next, run the following commands:
-```
-./composer-rest-server.sh
-```
-
-Next, determine the public IP address of the cluster by running the following command:
-```
-bx cs workers blockchain
-```
-The output should be similiar to the following:
-```
-Listing cluster workers...
-OK
-ID                                                 Public IP      Private IP       Machine Type   State    Status
-kube-dal10-pabdda14edc4394b57bb08d53c149930d7-w1   169.48.140.99   10.171.239.186   free           normal   Ready
-```
-Using the value of the `Public IP` (in this example 169.48.140.99) you can now access the Hyperledger Composer REST server:
-`http://YOUR_PUBLIC_IP_HERE:31090/explorer/`
 
 # Helpful commands:
 ```
