@@ -128,13 +128,12 @@ Following instructions will setup the blockchain network and create appropriate 
 
 *Note:* You might see some errors `Error from server (NotFound): error when stopping`. Ignore those errors, as those occur when the cleanup is trying to delete pods which are not created.
 
-### TL;DR
 To perform the setup, please run
 ```
 setup_all.sh
 ```
 
-To delete all the deployment, please run
+To delete all deployments, please run
 ```
 delete_all.sh
 ```
