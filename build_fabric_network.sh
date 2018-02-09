@@ -17,9 +17,9 @@ if [ ${INSTALL_MODE} == "INSTALL" ]; then
         sleep 60
         kubectl create -f ${PROJECTDIR}/kube_configs/platform
     fi
-elif [ "${CHAINCODE_ENABLED}" == "true" ]; then
+elif [ ${INSTALL_MODE} == "UNINSTALL" ]; then
     echo "Deleting Existing Deployment"
-    if [ ! -z "${CHAINCODE_ENABLED}" ]; then
+    if [ "${CHAINCODE_ENABLED}" == "true" ]; then
         kubectl delete -f ${PROJECTDIR}/kube_configs/chaincode
     else
         kubectl delete -f ${PROJECTDIR}/kube_configs/platform
