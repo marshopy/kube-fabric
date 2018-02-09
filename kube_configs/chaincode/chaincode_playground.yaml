@@ -24,6 +24,8 @@ spec:
     imagePullPolicy: Always
     command: ["bash", "-c", "/shared/utils/setup_network.sh mychannel 1 && ( while [ 1 ]; do sleep 100; done ) || sleep infinity"]
     env:
+    - name: CHAINCODE_ENABLED
+      value: "true"
     - name: ORDERER_URL
       value: orderer.ordererorg1:7050
     - name: ORDERER_CA

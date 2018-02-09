@@ -3,6 +3,7 @@ RUN apt-get update && apt-get install -y libtool libltdl-dev vim
 RUN mkdir -p ${GOPATH}/src/github.com/hyperledger && \
 	cd ${GOPATH}/src/github.com/hyperledger/ && \
 	git clone https://github.com/hyperledger/fabric.git && \
+	git clone https://github.com/hyperledger/fabric-samples.git && \
 	cd ${GOPATH}/src/github.com/hyperledger/fabric && \
 	git checkout tags/v1.0.5  && \
 	cd ${GOPATH}/src/github.com/hyperledger/fabric/common/tools/cryptogen && \
@@ -10,14 +11,8 @@ RUN mkdir -p ${GOPATH}/src/github.com/hyperledger && \
 	mv cryptogen /usr/bin/cryptogen && \
 	cd ${GOPATH}/src/github.com/hyperledger/fabric/common/configtx/tool/configtxgen && \
 	go build && \
-	mv configtxgen /usr/bin/configtxgen && \
-#	cd ${GOPATH}/src/github.com/hyperledger/fabric/peer && \
-#	go build && \
-#	mv peer /usr/bin/peer && \
-#	cp ${GOPATH}/src/github.com/hyperledger/fabric/peer/core.yaml /core.yaml && \
-#	mv ${GOPATH}/src/github.com/hyperledger /hyperledger
-#	mkdir /crypto && cp ${GOPATH}/src/github.com/hyperledger/fabric/examples/e2e_cli/configtx.yaml /crypto/configtx.yaml && \
-	rm -rf ${GOPATH}/src/github.com/hyperledger
+	mv configtxgen /usr/bin/configtxgen
+#	rm -rf ${GOPATH}/src/github.com/hyperledger
 
 # Install docker CLI
 RUN wget https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz
@@ -25,17 +20,12 @@ RUN tar -xvf docker-17.05.0-ce.tgz
 RUN cp docker/docker /usr/sbin/docker
 
 ADD fabric_utils /utils
-RUN cp /utils/*.sh /usr/bin/
-# RUN mv /core.yaml /utils/core.yaml
-RUN cp /usr/bin/cryptogen /utils/cryptogen
-RUN cp /usr/bin/configtxgen /utils/configtxgen
+RUN cp /utils/*.sh /usr/bin/ && \
+    touch /utils/core.yaml && \
+    cp /usr/bin/cryptogen /utils/cryptogen && \
+    cp /usr/bin/configtxgen /utils/configtxgen
 
 ADD ./output/executable/peer /usr/bin/peer
-#ADD ./output/peerconfig/fabric/ /utils/
-#ADD configtx.yaml /utils/configtx.yaml
-#ADD crypto-config.yaml /utils/crypto-config.yaml
-#ADD generate_crypto.sh /usr/bin/generate_crypto.sh
-#ADD generate_genesis_block.sh /usr/bin/generate_genesis_block.sh
 
 RUN chmod 755 /utils/*.sh
 

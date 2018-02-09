@@ -60,11 +60,11 @@ spec:
         - name: CORE_PEER_ID
           value: peer1.peerorg2
         - name: CORE_PEER_ADDRESS
-          value: peer1.peerorg2:7051
+          value: peer1.peerorg2:9051
         - name: CORE_PEER_GOSSIP_EXTERNALENDPOINT
-          value: peer1.peerorg2:7051
+          value: peer1.peerorg2:9051
         - name: CORE_PEER_GOSSIP_BOOTSTRAP
-          value: peer1.peerorg2:7051
+          value: peer1.peerorg2:9051
         - name: CORE_PEER_GOSSIP_USELEADERELECTION
           value: "true"
         - name: CORE_PEER_GOSSIP_ORGLEADER

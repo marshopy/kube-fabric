@@ -19,8 +19,5 @@ ${CURRENT_DIR}/generate_channel_block.sh ${CHANNEL_NAME}
 echo "Copying utils folder"
 cp -r /utils /shared/
 
-echo "Touch the core.yaml"
-touch /shared/utils/core.yaml
-
 echo "Done bootstrapping"
 touch /shared/bootstrapped
