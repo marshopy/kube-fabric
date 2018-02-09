@@ -8,7 +8,7 @@ if [ ${INSTALL_MODE} == "INSTALL" ]; then
     kubectl create -f ${PROJECTDIR}/kube_configs/bootstrap
     kubectl create -f ${PROJECTDIR}/kube_configs/blockchain
 
-    if [ ! -z "${CHAINCODE_ENABLED}" ]; then
+    if [ "${CHAINCODE_ENABLED}" == "true" ]; then
         echo "Waiting for 1 minute before doing end to end test"
         sleep 60
         kubectl create -f ${PROJECTDIR}/kube_configs/chaincode
@@ -17,7 +17,7 @@ if [ ${INSTALL_MODE} == "INSTALL" ]; then
         sleep 60
         kubectl create -f ${PROJECTDIR}/kube_configs/platform
     fi
-elif [ ${INSTALL_MODE} == "UNINSTALL" ]; then
+elif [ "${CHAINCODE_ENABLED}" == "true" ]; then
     echo "Deleting Existing Deployment"
     if [ ! -z "${CHAINCODE_ENABLED}" ]; then
         kubectl delete -f ${PROJECTDIR}/kube_configs/chaincode
