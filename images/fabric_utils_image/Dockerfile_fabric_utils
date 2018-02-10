@@ -21,7 +21,6 @@ RUN cp docker/docker /usr/sbin/docker
 
 ADD fabric_utils /utils
 RUN cp /utils/*.sh /usr/bin/ && \
-    touch /utils/core.yaml && \
     cp /usr/bin/cryptogen /utils/cryptogen && \
     cp /usr/bin/configtxgen /utils/configtxgen
 

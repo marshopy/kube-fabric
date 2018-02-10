@@ -33,18 +33,26 @@ setGlobals () {
 		CORE_PEER_TLS_ROOTCERT_FILE=/shared/crypto-config/peerOrganizations/peerorg1/peers/peer1.peerorg1/tls/ca.crt
 		CORE_PEER_MSPCONFIGPATH=/shared/crypto-config/peerOrganizations/peerorg1/users/Admin@peerorg1/msp
 		if [ $1 -eq 0 ]; then
+		    CORE_PEER_CHAINCODELISTENADDRESS=peer1.peerorg1:7052
 			CORE_PEER_ADDRESS=peer1.peerorg1:7051
+			CORE_PEER_SERVERHOSTOVERRIDE=peer1.peerorg1:7051
 		else
+		    CORE_PEER_CHAINCODELISTENADDRESS=peer1.peerorg1:8052
 			CORE_PEER_ADDRESS=peer2.peerorg1:8051
+			CORE_PEER_SERVERHOSTOVERRIDE=peer2.peerorg1:8051
 		fi
 	else
 		CORE_PEER_LOCALMSPID="Org2MSP"
 		CORE_PEER_TLS_ROOTCERT_FILE=/shared/crypto-config/peerOrganizations/peerorg2/peers/peer1.peerorg2/tls/ca.crt
 		CORE_PEER_MSPCONFIGPATH=/shared/crypto-config/peerOrganizations/peerorg2/users/Admin@peerorg2/msp
 		if [ $1 -eq 2 ]; then
+		    CORE_PEER_CHAINCODELISTENADDRESS=peer1.peerorg1:9052
 			CORE_PEER_ADDRESS=peer1.peerorg2:9051
+			CORE_PEER_SERVERHOSTOVERRIDE=peer1.peerorg2:9051
 		else
+		    CORE_PEER_CHAINCODELISTENADDRESS=peer2.peerorg2:10052
 			CORE_PEER_ADDRESS=peer2.peerorg2:10051
+			CORE_PEER_SERVERHOSTOVERRIDE=peer2.peerorg2:10051
 		fi
 	fi
 
