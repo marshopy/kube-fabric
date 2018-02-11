@@ -15,10 +15,6 @@ spec:
     targetPort: 7051
     name: grpc
   - protocol: TCP
-    port: 10052
-    targetPort: 7052
-    name: chaincode
-  - protocol: TCP
     port: 10053
     targetPort: 7053
     name: events
@@ -100,7 +96,6 @@ spec:
           name: dockersocket
         ports:
         - containerPort: 7051
-        - containerPort: 7052
         - containerPort: 7053
         readinessProbe:
           tcpSocket:

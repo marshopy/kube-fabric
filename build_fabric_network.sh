@@ -3,18 +3,23 @@ PROJECTDIR=$(dirname $0)
 INSTALL_MODE="$1"
 CHAINCODE_ENABLED="$2"
 
+[[ -z ${SLEEP_INTERVAL} ]] && SLEEP_INTERVAL=60
+
 if [ ${INSTALL_MODE} == "INSTALL" ]; then
     echo "Creating new Deployment"
     kubectl create -f ${PROJECTDIR}/kube_configs/bootstrap
+
+    echo "Waiting for ${SLEEP_INTERVAL} seconds for bootstrap to settle down"
+    sleep ${SLEEP_INTERVAL}
     kubectl create -f ${PROJECTDIR}/kube_configs/blockchain
 
     if [ "${CHAINCODE_ENABLED}" == "true" ]; then
-        echo "Waiting for 1 minute before doing end to end test"
-        sleep 60
+        echo "Waiting for ${SLEEP_INTERVAL} seconds before doing end to end test"
+        sleep ${SLEEP_INTERVAL}
         kubectl create -f ${PROJECTDIR}/kube_configs/chaincode
     else
-        echo "Waiting for 1 minute before setting up the platform"
-        sleep 60
+        echo "Waiting for ${SLEEP_INTERVAL} seconds before setting up the platform"
+        sleep ${SLEEP_INTERVAL}
         kubectl create -f ${PROJECTDIR}/kube_configs/platform
     fi
 elif [ ${INSTALL_MODE} == "UNINSTALL" ]; then
